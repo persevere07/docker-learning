@@ -1,182 +1,156 @@
-# 🐳 Docker Fundamentals — 01
- 1. What is Docker?
+# Docker Fundamentals — 01
 
-Docker is a platform used to build, package, and run applications inside **containers**.
+## 1. Introduction to Docker
 
-A container includes the application and the dependencies it needs to run. This helps the application behave consistently across different environments, such as a developer's laptop, a Linux server, or AWS EC2.
+Docker is a containerization platform used to build, package, and run applications in isolated environments called **containers**.
 
-### Why do we use Docker?
+Containers package an application with its required dependencies, helping ensure consistent behavior across development machines, servers, and cloud environments.
 
-- **Consistency:** Applications can run consistently across environments.
-- **Portability:** Containers can run on different compatible systems.
-- **Isolation:** Applications run in separate container environments.
-- **Efficiency:** Containers share the host operating system's kernel.
-- **Scalability:** Containers make it easier to deploy multiple application instances.
+### Benefits of Docker
 
----
+- **Consistency:** Provides consistent application environments.
+- **Portability:** Runs containers across compatible environments.
+- **Isolation:** Separates application processes and dependencies.
+- **Efficiency:** Shares the host operating system's kernel.
+- **Scalability:** Simplifies deploying and managing multiple application instances.
 
-## 2. Docker vs Virtual Machines
+## 2. Docker Containers vs Virtual Machines
 
 | Docker Containers | Virtual Machines |
 |---|---|
-| Share the host OS kernel | Usually run a separate guest OS |
+| Share the host OS kernel | Typically run a separate guest OS |
 | Generally lightweight | Generally require more resources |
-| Usually start quickly | Usually take longer to start |
+| Start quickly | Usually take longer to start |
 | Package applications and dependencies | Include a complete guest OS environment |
+| Use container isolation | Use hardware virtualization |
 
-**Example:** Instead of installing and configuring Nginx manually on every server, we can run Nginx inside a Docker container.
+**Example:** Docker allows Nginx to run inside a container without requiring a manual installation and configuration on every compatible server.
 
----
-
-## 3. Important Docker Concepts
+## 3. Core Docker Concepts
 
 ### Docker Image
-An image is a read-only template used to create containers.
 
-Example: An Nginx image contains the files and configuration needed to run Nginx.
+A Docker image is a read-only template containing the filesystem, application files, and configuration required to create a container.
 
 ### Docker Container
-A container is an instance of a Docker image. It can be running or stopped.
+
+A container is an instance of an image. It can be running, stopped, or exited.
 
 ### Docker Engine
-The software responsible for building and running containers.
 
-### Docker Client
-The command-line tool used to interact with Docker Engine.
+Docker Engine is responsible for building and running containers and managing Docker resources.
+
+### Docker CLI
+
+The Docker Command-Line Interface (CLI) allows users to interact with Docker Engine through terminal commands.
 
 ### Docker Registry
-A service that stores and distributes Docker images. Docker Hub is a popular public registry.
 
----
+A Docker registry stores and distributes container images. Docker Hub is a widely used public registry.
 
-## 4. Understanding Docker Architecture
+## 4. Docker Architecture
 
-When you run a Docker command:
+Docker uses a client-server architecture.
 
-1. You enter a command using the Docker CLI.
-2. The CLI communicates with the Docker Engine.
-3. The Engine manages images, containers, networks, and volumes.
-4. If an image is missing locally, Docker can download it from a registry.
+1. The user executes a command through the Docker CLI.
+2. The CLI communicates with the Docker daemon.
+3. The daemon manages images, containers, networks, and volumes.
+4. When an image is unavailable locally, Docker can pull it from a configured registry.
 
-**Basic flow:**
+**Architecture flow:**
 
-`Docker CLI → Docker Engine → Container`
+```text
+Docker CLI
+    |
+    v
+Docker Daemon
+    |
+    +---- Images
+    |
+    +---- Containers
+    |
+    +---- Networks
+    |
+    +---- Volumes
+    |
+    v
+Docker Registry
+```
 
-`Docker Engine ↔ Docker Registry`
+## 5. Essential Docker Commands
 
----
-
-# 🛠️ 5. Essential Docker Commands
-
-## Command 1: Check Docker Version
+### 5.1 Check Docker Version
 
 ```bash
 docker --version
 ```
 
-**Purpose:** Displays the installed Docker CLI version.
+Displays the installed Docker CLI version.
 
-**Why it matters:** Confirms that the Docker command-line tool is installed and accessible.
-
----
-
-## Command 2: View Docker System Information
+### 5.2 View Docker System Information
 
 ```bash
 docker info
 ```
 
-**Purpose:** Displays detailed information about Docker Engine.
+Displays Docker Engine information, including container counts, image counts, storage configuration, and system details.
 
-It includes information about containers, images, storage drivers, and the server environment.
-
-**Important:** If this command fails, Docker Engine may not be running, may not be installed, or your user may lack permission to access it.
-
----
-
-## Command 3: Run Your First Container
+### 5.3 Run the First Container
 
 ```bash
 docker run hello-world
 ```
 
-**Purpose:** Runs a simple test container.
+Downloads the `hello-world` image if it is not available locally, creates a container, and executes the test program.
 
-What happens:
+The container prints a confirmation message and exits.
 
-1. Docker looks for the `hello-world` image locally.
-2. If it is missing, Docker downloads it from a registry.
-3. Docker creates a container from the image.
-4. The container prints a success message and exits.
-
-**Key takeaway:** `docker run` creates and starts a container from an image when needed.
-
----
-
-## Command 4: List Running Containers
+### 5.4 List Running Containers
 
 ```bash
 docker ps
 ```
 
-**Purpose:** Displays currently running containers.
+Displays containers that are currently running.
 
-**Example:** If an Nginx container is running, it can appear in this list.
-
----
-
-## Command 5: List All Containers
+### 5.5 List All Containers
 
 ```bash
 docker ps -a
 ```
 
-**Purpose:** Displays all containers, including stopped and exited containers.
+Displays all containers, including those that have stopped or exited.
 
-**Difference:**
+| Command | Purpose |
+|---|---|
+| `docker ps` | Lists running containers |
+| `docker ps -a` | Lists all containers |
 
-- `docker ps` → Running containers only.
-- `docker ps -a` → Running and stopped containers.
-
-The `hello-world` container usually appears in `docker ps -a` because it exits after printing its message.
-
----
-
-## Command 6: List Downloaded Images
+### 5.6 List Local Images
 
 ```bash
 docker images
 ```
 
-**Purpose:** Lists Docker images stored locally.
+Displays Docker images stored on the local system.
 
-You may see the `hello-world` image after running your first container.
-
-**Remember:** An image is the template; a container is an instance created from that template.
-
----
-
-## Command 7: View Docker Help
+### 5.7 Access Docker Help
 
 ```bash
 docker --help
 ```
 
-**Purpose:** Displays available Docker commands and general usage information.
+Displays available Docker commands and usage information.
 
-To explore a specific command, use:
+To view options for a specific command:
 
 ```bash
 docker run --help
 ```
 
-This displays the available options for `docker run`.
+## 6. Practical Exercise
 
----
-
-# 🧪 6. Hands-On Practical Exercise
-
-Run these commands one by one in your terminal:
+Execute the following commands in sequence:
 
 ```bash
 docker --version
@@ -187,52 +161,67 @@ docker ps -a
 docker images
 ```
 
-### What to observe
+### Expected Observations
 
-1. Does Docker display its version?
-2. Does `docker info` return Engine information?
-3. Does `hello-world` print a success message?
-4. Why might `docker ps` show no containers?
-5. Can you find the exited container using `docker ps -a`?
-6. Can you find the image using `docker images`?
+- Docker displays its CLI version.
+- Docker Engine returns system information.
+- The `hello-world` container prints a confirmation message.
+- `docker ps` may show no containers because the test container exits after execution.
+- `docker ps -a` displays the exited container.
+- `docker images` displays the downloaded image.
 
-Save your terminal output or screenshots as evidence of your practical work.
+## 7. Troubleshooting
 
----
+### Docker Command Not Found
 
-# ⚠️ 7. Common Errors and Troubleshooting
+**Cause:** Docker may not be installed, or its executable may not be available in the system's PATH.
 
-### Error: `docker: command not found`
+**Resolution:** Install Docker using the official documentation for your operating system.
 
-**Meaning:** Docker may not be installed, or the command may not be available in your PATH.
+### Cannot Connect to Docker Daemon
 
-**Solution:** Install Docker using the official documentation for your operating system.
+**Cause:** Docker Engine may not be running, or the current user may lack permission to access it.
 
-### Error: Cannot connect to the Docker daemon
-
-**Meaning:** Docker Engine may not be running or may be inaccessible.
-
-On Ubuntu systems using systemd, check its status:
+On Ubuntu systems using systemd, check the service status:
 
 ```bash
 sudo systemctl status docker
 ```
 
-If Docker is installed but inactive, start it:
+If Docker is installed but inactive, start the service:
 
 ```bash
 sudo systemctl start docker
 ```
 
-### Error: Permission denied
+### Permission Denied
 
-On Linux, test whether the issue is caused by Docker socket permissions:
+On Linux, test Docker access with elevated privileges:
 
 ```bash
 sudo docker run hello-world
 ```
 
-Be aware that membership in the `docker` group grants highly privileged access, effectively equivalent to root-level access. Only grant it to trusted users.
+The Docker group grants highly privileged access to the host system. Add users to this group only when they are trusted.
+
+## 8. Key Takeaways
+
+- Docker packages applications and dependencies into containers.
+- Images are templates; containers are instances of images.
+- Docker Engine manages container operations.
+- Docker registries store and distribute images.
+- `docker ps` lists running containers, while `docker ps -a` includes stopped containers.
+- `docker images` lists images available locally.
+
+## 9. References
+
+- [Docker Official Documentation](https://docs.docker.com/)
+- [Docker Get Started Guide](https://docs.docker.com/get-started/)
+- [Docker CLI Reference](https://docs.docker.com/reference/cli/docker/)
 
 ---
+
+**Repository:** Docker Learning Journey  
+**Module:** 01 — Docker Fundamentals  
+**Topics:** Containerization, architecture, images, containers, essential commands, and troubleshooting.
 
